@@ -6,7 +6,8 @@
 }
 
 body {
-  background-color: #f8fafc; /* Very light slate background */
+  background-color: #f8fafc;
+  /* Very light slate background */
   color: #0f172a;
   height: 100vh;
   width: 100vw;
@@ -26,7 +27,8 @@ body {
 
 /* Minimalist Clean Header */
 .chat-header {
-  background-color: #4f46e5; /* Deep indigo accent */
+  background-color: #4f46e5;
+  /* Deep indigo accent */
   color: #ffffff;
   padding: 16px 24px;
   text-align: center;
@@ -39,7 +41,8 @@ body {
 /* Full-width container with comfortable margins */
 .chat-window {
   flex: 1;
-  padding: 30px 15%; /* Generous side padding for desktop */
+  padding: 30px 15%;
+  /* Generous side padding for desktop */
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -60,7 +63,8 @@ body {
 /* User Message: Aligned Right with modern Indigo accent */
 .message.user {
   align-self: flex-end;
-  background-color: #4f46e5; /* Deep indigo */
+  background-color: #4f46e5;
+  /* Deep indigo */
   color: #ffffff;
   border-bottom-right-radius: 2px;
 }
@@ -68,7 +72,8 @@ body {
 /* AI Message: Aligned Left with crisp off-white/light-gray tone */
 .message.ai {
   align-self: flex-start;
-  background-color: #f1f5f9; /* Slate tint */
+  background-color: #f1f5f9;
+  /* Slate tint */
   color: #0f172a;
   border: 1px solid #e2e8f0;
   border-bottom-left-radius: 2px;
@@ -125,6 +130,21 @@ body {
   transition: background-color 0.2s ease;
 }
 
+#clear-chat-btn {
+  padding: 10px 16px;
+  background-color: #ffffff;
+  color: #4f46e5;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+#clear-chat-btn:hover {
+  background-color: #f1f5f9;
+}
+
 #send-btn:hover {
   background-color: #4338ca;
 }
@@ -137,12 +157,15 @@ body {
 
 /* Responsive adjustment for small screens */
 @media (max-width: 768px) {
-  .chat-window, .input-container {
+
+  .chat-window,
+  .input-container {
     padding-left: 16px;
     padding-right: 16px;
   }
-  
+
   .message {
-    max-width: 88%; /* Give messages slightly more room on mobile */
+    max-width: 88%;
+    /* Give messages slightly more room on mobile */
   }
 }

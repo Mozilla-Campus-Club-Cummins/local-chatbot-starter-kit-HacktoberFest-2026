@@ -1,6 +1,11 @@
 const chatWindow = document.getElementById('chat-window');
 const userInput = document.getElementById('user-input');
 const sendBtn = document.getElementById('send-btn');
+const clearChatBtn = document.getElementById('clear-chat-btn');
+clearChatBtn.addEventListener('click', () => {
+  chatWindow.innerHTML = '';
+  userInput.focus();
+});
 
 sendBtn.addEventListener('click', sendMessage);
 userInput.addEventListener('keypress', (event) => {
@@ -35,7 +40,7 @@ async function sendMessage() {
     }
 
     const data = await response.json();
-    
+
     // 4. Render AI Reply
     appendMessage(data.reply || 'No response received.', 'ai');
 
@@ -53,9 +58,9 @@ function appendMessage(text, senderClass) {
   const messageElement = document.createElement('div');
   messageElement.classList.add('message', senderClass);
   messageElement.textContent = text;
-  
+
   chatWindow.appendChild(messageElement);
-  
+
   // Auto-scroll to the bottom
   chatWindow.scrollTop = chatWindow.scrollHeight;
 }
