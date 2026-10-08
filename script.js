@@ -1,6 +1,12 @@
 const chatWindow = document.getElementById('chat-window');
 const userInput = document.getElementById('user-input');
 const sendBtn = document.getElementById('send-btn');
+const themeToggle = document.getElementById('theme-toggle');
+
+// Toggle the dark theme when the user clicks the theme button
+themeToggle.addEventListener('click', () => {
+    document.body.classList.toggle("dark");
+});
 
 sendBtn.addEventListener('click', sendMessage);
 userInput.addEventListener('keypress', (event) => {

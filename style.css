@@ -5,10 +5,27 @@
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
+/* Theme colors for light mode */
+:root {
+  --bg-color: #f8fafc;
+  --surface-color: #ffffff;
+  --text-color: #0f172a;
+  --secondary-bg: #f1f5f9;
+  --border-color: #e2e8f0;
+}
+
+/* Override theme colors when dark mode is enabled */
+.dark {
+  --bg-color: #0f172a;
+  --surface-color: #111827;
+  --text-color: #f1f5f9;
+  --secondary-bg: #1e293b;
+  --border-color: #334155;
+}
+
 body {
-  background-color: #f8fafc;
-  /* Very light slate background */
-  color: #0f172a;
+  background-color: var(--bg-color); /* Very light slate background */
+  color: var(--text-color);
   height: 100vh;
   width: 100vw;
   display: flex;
@@ -20,7 +37,7 @@ body {
 .chat-container {
   width: 100vw;
   height: 100vh;
-  background: #ffffff;
+  background: var(--surface-color);
   display: flex;
   flex-direction: column;
 }
@@ -32,6 +49,28 @@ body {
   color: #ffffff;
   padding: 16px 24px;
   text-align: center;
+  position: relative; /* Keep the title centered while positioning the theme toggle independently */
+}
+
+/* Position the theme toggle at the right side of the header */
+#theme-toggle {
+  position: absolute;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+
+  padding: 8px 14px;
+  background: transparent;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+#theme-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.218);
 }
 
 .chat-header h2 {
@@ -72,10 +111,9 @@ body {
 /* AI Message: Aligned Left with crisp off-white/light-gray tone */
 .message.ai {
   align-self: flex-start;
-  background-color: #f1f5f9;
-  /* Slate tint */
-  color: #0f172a;
-  border: 1px solid #e2e8f0;
+  background-color: var(--secondary-bg); /* Slate tint */
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
   border-bottom-left-radius: 2px;
 }
 
@@ -91,8 +129,8 @@ body {
 /* Input Bar Container */
 .input-container {
   padding: 20px 15%;
-  background-color: #ffffff;
-  border-top: 1px solid #e2e8f0;
+  background-color: var(--surface-color);
+  border-top: 1px solid var(--border-color);
   display: flex;
   gap: 12px;
 }
@@ -100,9 +138,9 @@ body {
 #user-input {
   flex: 1;
   padding: 14px 18px;
-  background-color: #f8fafc;
-  color: #0f172a;
-  border: 1px solid #cbd5e1;
+  background-color: var(--secondary-bg);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   outline: none;
   font-size: 15px;
