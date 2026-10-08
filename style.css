@@ -199,7 +199,8 @@ body {
 /* Typing indicator */
 .typing-indicator {
   align-self: flex-start;
-  background: #f1f5f9;
+  background: var(--secondary-bg);
+  color: var(--text-color);
   padding: 10px 14px;
   border-radius: 12px;
 }
