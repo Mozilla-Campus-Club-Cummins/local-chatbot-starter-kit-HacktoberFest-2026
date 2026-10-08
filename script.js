@@ -25,6 +25,7 @@ async function sendMessage() {
 
   // 2. Disable controls while waiting for backend
   toggleInputState(true);
+  showTypingIndicator();
 
   try {
     // 3. Call Plain Java Backend endpoint
@@ -41,7 +42,8 @@ async function sendMessage() {
     }
 
     const data = await response.json();
-    
+    removeTypingIndicator();
+
     // 4. Render AI Reply
     appendMessage(data.reply || 'No response received.', 'ai');
 
@@ -49,7 +51,7 @@ async function sendMessage() {
     console.error('Fetch error:', error);
     appendMessage('Error: Unable to reach the local backend server.', 'error');
   } finally {
-    // 5. Re-enable inputs
+    removeTypingIndicator();
     toggleInputState(false);
     userInput.focus();
   }
@@ -59,9 +61,9 @@ function appendMessage(text, senderClass) {
   const messageElement = document.createElement('div');
   messageElement.classList.add('message', senderClass);
   messageElement.textContent = text;
-  
+
   chatWindow.appendChild(messageElement);
-  
+
   // Auto-scroll to the bottom
   chatWindow.scrollTop = chatWindow.scrollHeight;
 }
@@ -69,4 +71,19 @@ function appendMessage(text, senderClass) {
 function toggleInputState(isDisabled) {
   userInput.disabled = isDisabled;
   sendBtn.disabled = isDisabled;
+}
+
+/*added function*/
+function showTypingIndicator() {
+  const indicator = document.createElement('div');
+  indicator.className = 'message typing-indicator';
+  indicator.id = 'typing-indicator';
+  indicator.innerHTML = '<span>•</span><span>•</span><span>•</span>';
+  chatWindow.appendChild(indicator);
+  chatWindow.scrollTop = chatWindow.scrollHeight;
+}
+
+function removeTypingIndicator() {
+  const indicator = document.getElementById('typing-indicator');
+  if (indicator) indicator.remove();
 }
