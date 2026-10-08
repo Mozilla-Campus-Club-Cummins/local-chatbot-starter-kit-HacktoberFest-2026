@@ -35,7 +35,7 @@ async function sendMessage() {
     }
 
     const data = await response.json();
-    
+
     // 4. Render AI Reply
     appendMessage(data.reply || 'No response received.', 'ai');
 
@@ -53,9 +53,26 @@ function appendMessage(text, senderClass) {
   const messageElement = document.createElement('div');
   messageElement.classList.add('message', senderClass);
   messageElement.textContent = text;
-  
+
+  if (senderClass === 'ai') {
+    const copyButton = document.createElement('button');
+    copyButton.textContent = 'Copy';
+    copyButton.classList.add('copy-btn');
+
+    copyButton.addEventListener('click', async () => {
+      await navigator.clipboard.writeText(text);
+      copyButton.textContent = 'Copied!';
+
+      setTimeout(() => {
+        copyButton.textContent = 'Copy';
+      }, 1500);
+    });
+
+    messageElement.appendChild(copyButton);
+  }
+
   chatWindow.appendChild(messageElement);
-  
+
   // Auto-scroll to the bottom
   chatWindow.scrollTop = chatWindow.scrollHeight;
 }
