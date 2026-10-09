@@ -12,6 +12,9 @@
   --text-color: #0f172a;
   --secondary-bg: #f1f5f9;
   --border-color: #e2e8f0;
+  --error-bg: hsl(0, 60%, 80%);
+  --error-text: hsl(0, 0%, 0%);
+  --error-border: #c93a3a;
 }
 
 /* Override theme colors when dark mode is enabled */
@@ -21,6 +24,9 @@
   --text-color: #f1f5f9;
   --secondary-bg: #1e293b;
   --border-color: #334155;
+  --error-bg: #004278;
+  --error-text: #ffffff;
+  --error-border: #00326b;
 }
 
 body {
@@ -120,10 +126,10 @@ body {
 /* Error message state */
 .message.error {
   align-self: center;
-  background-color: #fef2f2;
-  color: #991b1b;
+  background-color: var(--error-bg);
+  color: var(--error-text);
   font-size: 14px;
-  border: 1px solid #fecaca;
+  border: 1px solid var(--error-border);
 }
 
 /* Input Bar Container */
@@ -199,7 +205,8 @@ body {
 /* Typing indicator */
 .typing-indicator {
   align-self: flex-start;
-  background: #f1f5f9;
+  background: var(--secondary-bg);
+  color: var(--text-color);
   padding: 10px 14px;
   border-radius: 12px;
 }
