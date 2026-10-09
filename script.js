@@ -5,7 +5,7 @@ const themeToggle = document.getElementById('theme-toggle');
 
 // Toggle the dark theme when the user clicks the theme button
 themeToggle.addEventListener('click', () => {
-    document.body.classList.toggle("dark");
+  document.body.classList.toggle("dark");
 });
 
 sendBtn.addEventListener('click', sendMessage);
@@ -62,6 +62,22 @@ function appendMessage(text, senderClass) {
   messageElement.classList.add('message', senderClass);
   messageElement.textContent = text;
 
+  if (senderClass === 'ai') {
+    const copyButton = document.createElement('button');
+    copyButton.textContent = 'Copy';
+    copyButton.classList.add('copy-btn');
+
+    copyButton.addEventListener('click', async () => {
+      await navigator.clipboard.writeText(text);
+      copyButton.textContent = 'Copied!';
+
+      setTimeout(() => {
+        copyButton.textContent = 'Copy';
+      }, 1500);
+    });
+
+    messageElement.appendChild(copyButton);
+  }
   chatWindow.appendChild(messageElement);
 
   // Auto-scroll to the bottom
