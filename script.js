@@ -2,11 +2,24 @@ const chatWindow = document.getElementById('chat-window');
 const userInput = document.getElementById('user-input');
 const sendBtn = document.getElementById('send-btn');
 const themeToggle = document.getElementById('theme-toggle');
+const clearChatBtn = document.getElementById('clear-chat-btn');
 
 // Toggle the dark theme when the user clicks the theme button
 themeToggle.addEventListener('click', () => {
   document.body.classList.toggle("dark");
 });
+
+// Clear chat window and restore initial greeting
+if (clearChatBtn) {
+  clearChatBtn.addEventListener('click', () => {
+    chatWindow.innerHTML = `
+      <div class="message ai">
+        <span class="message-text">Hello :) I am your local AI. How can I help you today?</span>
+        <span class="message-time">${formatTimestamp()}</span>
+      </div>
+    `;
+  });
+}
 
 sendBtn.addEventListener('click', sendMessage);
 userInput.addEventListener('keypress', (event) => {

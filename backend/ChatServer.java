@@ -22,7 +22,7 @@ public class ChatServer {
 
         server.createContext("/chat", (HttpExchange exchange) -> {
             try {
-                //Allow any origin to call this server
+                // Allow any origin to call this server
                 exchange.getResponseHeaders().set("Access-Control-Allow-Origin", "*");
                 exchange.getResponseHeaders().set("Access-Control-Allow-Methods", "POST, OPTIONS");
                 exchange.getResponseHeaders().set("Access-Control-Allow-Headers", "Content-Type");
@@ -33,27 +33,28 @@ public class ChatServer {
                     return;
                 }
 
-
-                //Read the user's message
+                // Read the user's message
                 InputStream is = exchange.getRequestBody();
                 ByteArrayOutputStream buffer = new ByteArrayOutputStream();
                 is.transferTo(buffer);
                 String rawBody = buffer.toString();
 
-                //Parse the incoming JSON and extract just the "message" field
+                // Parse the incoming JSON and extract the message/prompt safely
                 JsonNode requestNode = mapper.readTree(rawBody);
-                String userMessage = buffer.toString();
+                String userMessage = requestNode.has("message") 
+                    ? requestNode.get("message").asText() 
+                    : requestNode.get("prompt").asText();
 
-                System.out.println("Received: " + userMessage);
+                System.out.println("Received message: " + userMessage);
 
-                //Build the request body using Jackson
+                // Build the request body using Jackson with the correct "llama3" model name
                 Map<String, Object> ollamaRequestMap = new HashMap<>();
-                ollamaRequestMap.put("model", "llama3.2:1b");
+                ollamaRequestMap.put("model", "llama3");
                 ollamaRequestMap.put("prompt", userMessage);
                 ollamaRequestMap.put("stream", false);
                 String ollamaRequestBody = mapper.writeValueAsString(ollamaRequestMap);
 
-                //Send it to Ollama
+                // Send it to Ollama
                 HttpClient client = HttpClient.newHttpClient();
                 HttpRequest ollamaRequest = HttpRequest.newBuilder()
                     .uri(URI.create("http://localhost:11434/api/generate"))
@@ -63,13 +64,13 @@ public class ChatServer {
 
                 HttpResponse<String> ollamaResponse = client.send(ollamaRequest, HttpResponse.BodyHandlers.ofString());
 
-                //Parse Ollama's response
+                // Parse Ollama's response
                 JsonNode rootNode = mapper.readTree(ollamaResponse.body());
                 String aiReply = rootNode.get("response").asText();
 
                 System.out.println("AI reply: " + aiReply);
 
-                //Send back a clean JSON response
+                // Send back a clean JSON response
                 Map<String, String> finalResponse = new HashMap<>();
                 finalResponse.put("reply", aiReply);
                 String responseJson = mapper.writeValueAsString(finalResponse);
