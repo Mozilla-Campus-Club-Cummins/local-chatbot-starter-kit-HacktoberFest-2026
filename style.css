@@ -197,16 +197,27 @@ body {
 
 /*added*/
 /* Typing indicator */
+/* Typing indicator */
 .typing-indicator {
   align-self: flex-start;
-  background: #f1f5f9;
+  background: var(--secondary-bg);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
   padding: 10px 14px;
   border-radius: 12px;
+  min-width: 64px;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
 }
 
 .typing-indicator span {
   display: inline-block;
-  margin: 0 2px;
+  color: var(--text-color);
+  font-size: 20px;
+  line-height: 1;
   animation: blink 1.2s infinite;
 }
 
@@ -228,4 +239,27 @@ body {
   50% {
     opacity: 1;
   }
+}
+
+/* Copy button for AI responses */
+.copy-btn {
+  display: block;
+  margin-top: 10px;
+  padding: 5px 10px;
+  background-color: transparent;
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background-color 0.2s ease;
+}
+
+.copy-btn:hover {
+  background-color: var(--border-color);
+}
+
+.copy-btn:disabled {
+  cursor: default;
+  opacity: 0.7;
 }

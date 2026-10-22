@@ -60,7 +60,43 @@ async function sendMessage() {
 function appendMessage(text, senderClass) {
   const messageElement = document.createElement('div');
   messageElement.classList.add('message', senderClass);
-  messageElement.textContent = text;
+
+  const textElement = document.createElement('span');
+  textElement.classList.add('message-text');
+  textElement.textContent = text;
+
+  messageElement.appendChild(textElement);
+
+  // Add a copy button only to AI responses
+  if (senderClass === 'ai') {
+    const copyBtn = document.createElement('button');
+    copyBtn.classList.add('copy-btn');
+    copyBtn.textContent = '📋 Copy';
+    copyBtn.setAttribute('aria-label', 'Copy AI response');
+
+    copyBtn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(text);
+
+        copyBtn.textContent = '✓ Copied!';
+        copyBtn.disabled = true;
+
+        setTimeout(() => {
+          copyBtn.textContent = '📋 Copy';
+          copyBtn.disabled = false;
+        }, 1500);
+      } catch (error) {
+        console.error('Failed to copy response:', error);
+        copyBtn.textContent = 'Copy failed';
+
+        setTimeout(() => {
+          copyBtn.textContent = '📋 Copy';
+        }, 1500);
+      }
+    });
+
+    messageElement.appendChild(copyBtn);
+  }
 
   chatWindow.appendChild(messageElement);
 
