@@ -29,7 +29,8 @@
   --error-border: #00326b;
 }
 
-html, body {
+html,
+body {
   height: 100%;
   margin: 0;
   display: flex;
@@ -88,9 +89,12 @@ body {
 /* Chat container expands to fill remaining space */
 .chat-window,
 #chat-window {
-  flex: 1;
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
   padding: 30px 15%;
   overflow-y: auto;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -222,10 +226,12 @@ body {
 }
 
 @keyframes blink {
+
   0%,
   100% {
     opacity: 0.3;
   }
+
   50% {
     opacity: 1;
   }
@@ -269,6 +275,7 @@ body.dark .message.error .message-time {
 
 /* Responsive adjustment for small screens */
 @media (max-width: 768px) {
+
   .chat-window,
   #chat-window,
   .input-container {
@@ -279,4 +286,27 @@ body.dark .message.error .message-time {
   .message {
     max-width: 88%;
   }
+}
+
+/*added lines*/
+/* Scroll to Bottom Button */
+#scroll-bottom-btn {
+  display: none;
+  position: fixed;
+  bottom: 95px;
+  right: 30px;
+  width: 42px;
+  height: 42px;
+  border: none;
+  border-radius: 50%;
+  background-color: #4f46e5;
+  color: #ffffff;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+}
+
+#scroll-bottom-btn:hover {
+  background-color: #4338ca;
 }

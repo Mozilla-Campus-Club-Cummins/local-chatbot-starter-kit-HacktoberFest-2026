@@ -2,6 +2,26 @@ const chatWindow = document.getElementById('chat-window');
 const userInput = document.getElementById('user-input');
 const sendBtn = document.getElementById('send-btn');
 const themeToggle = document.getElementById('theme-toggle');
+const scrollBottomBtn = document.getElementById('scroll-bottom-btn');
+
+/*added lines*/
+// Show the button when the user scrolls up
+function updateScrollButton() {
+  const distanceFromBottom =
+    chatWindow.scrollHeight - chatWindow.scrollTop - chatWindow.clientHeight;
+
+  scrollBottomBtn.style.display = distanceFromBottom > 20 ? 'block' : 'none';
+}
+
+chatWindow.addEventListener('scroll', updateScrollButton);
+
+// Scroll to the latest message when clicked
+scrollBottomBtn.addEventListener('click', () => {
+  chatWindow.scrollTo({
+    top: chatWindow.scrollHeight,
+    behavior: 'smooth'
+  });
+});
 
 // Toggle the dark theme when the user clicks the theme button
 themeToggle.addEventListener('click', () => {
