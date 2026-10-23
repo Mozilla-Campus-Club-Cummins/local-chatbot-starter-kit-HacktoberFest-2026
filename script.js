@@ -71,18 +71,18 @@ function appendMessage(text, senderClass) {
   if (senderClass === 'ai') {
     const copyBtn = document.createElement('button');
     copyBtn.classList.add('copy-btn');
-    copyBtn.textContent = '📋 Copy';
+    copyBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg>`;
     copyBtn.setAttribute('aria-label', 'Copy AI response');
 
     copyBtn.addEventListener('click', async () => {
       try {
         await navigator.clipboard.writeText(text);
 
-        copyBtn.textContent = '✓ Copied!';
+        copyBtn.textContent = '✓';
         copyBtn.disabled = true;
 
         setTimeout(() => {
-          copyBtn.textContent = '📋 Copy';
+          copyBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg>`;
           copyBtn.disabled = false;
         }, 1500);
       } catch (error) {
