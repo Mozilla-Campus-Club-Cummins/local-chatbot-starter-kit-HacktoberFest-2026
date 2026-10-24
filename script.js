@@ -2,18 +2,59 @@ const chatWindow = document.getElementById('chat-window');
 const userInput = document.getElementById('user-input');
 const sendBtn = document.getElementById('send-btn');
 const themeToggle = document.getElementById('theme-toggle');
+const scrollBottomBtn = document.getElementById('scroll-bottom-btn');
+
+/*added lines*/
+// Show the button when the user scrolls up
+function updateScrollButton() {
+  const distanceFromBottom =
+    chatWindow.scrollHeight - chatWindow.scrollTop - chatWindow.clientHeight;
+
+  scrollBottomBtn.style.display = distanceFromBottom > 20 ? 'block' : 'none';
+}
+
+chatWindow.addEventListener('scroll', updateScrollButton);
+
+// Scroll to the latest message when clicked
+scrollBottomBtn.addEventListener('click', () => {
+  chatWindow.scrollTo({
+    top: chatWindow.scrollHeight,
+    behavior: 'smooth'
+  });
+});
 
 // Toggle the dark theme when the user clicks the theme button
 themeToggle.addEventListener('click', () => {
-    document.body.classList.toggle("dark");
+  document.body.classList.toggle("dark");
 });
 
 sendBtn.addEventListener('click', sendMessage);
-userInput.addEventListener('keypress', (event) => {
-  if (event.key === 'Enter') {
+userInput.addEventListener('keydown', (event) => {
+  if (event.key === 'Enter' && !event.shiftKey) {
+    event.preventDefault();
     sendMessage();
   }
 });
+
+// Automatically resize textarea as the user types
+userInput.addEventListener('input', () => {
+  userInput.style.height = 'auto';
+
+  const maxHeight = 150;
+  userInput.style.height = Math.min(userInput.scrollHeight, maxHeight) + 'px';
+
+  userInput.style.overflowY =
+    userInput.scrollHeight > maxHeight ? 'auto' : 'hidden';
+});
+
+// Helper: Format timestamp as "hh:mm AM/PM"
+function formatTimestamp() {
+  const now = new Date();
+  return now.toLocaleTimeString([], {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
+}
 
 async function sendMessage() {
   const text = userInput.value.trim();
@@ -22,6 +63,9 @@ async function sendMessage() {
   // 1. Render User Message & clear input
   appendMessage(text, 'user');
   userInput.value = '';
+
+  userInput.style.height = 'auto';
+  userInput.style.overflowY = 'hidden';
 
   // 2. Disable controls while waiting for backend
   toggleInputState(true);
@@ -67,6 +111,8 @@ function appendMessage(text, senderClass) {
 
   messageElement.appendChild(textElement);
 
+  messageElement.style.whiteSpace = 'pre-wrap';
+
   // Add a copy button only to AI responses
   if (senderClass === 'ai') {
     const copyBtn = document.createElement('button');
@@ -98,6 +144,12 @@ function appendMessage(text, senderClass) {
     messageElement.appendChild(copyBtn);
   }
 
+  // Timestamp container
+  const timeElement = document.createElement('span');
+  timeElement.classList.add('message-time');
+  timeElement.textContent = formatTimestamp();
+
+  messageElement.appendChild(timeElement);
   chatWindow.appendChild(messageElement);
 
   // Auto-scroll to the bottom
@@ -109,7 +161,6 @@ function toggleInputState(isDisabled) {
   sendBtn.disabled = isDisabled;
 }
 
-/*added function*/
 function showTypingIndicator() {
   const indicator = document.createElement('div');
   indicator.className = 'message typing-indicator';

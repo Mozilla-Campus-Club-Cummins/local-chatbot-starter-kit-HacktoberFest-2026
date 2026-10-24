@@ -12,6 +12,9 @@
   --text-color: #0f172a;
   --secondary-bg: #f1f5f9;
   --border-color: #e2e8f0;
+  --error-bg: hsl(0, 60%, 80%);
+  --error-text: hsl(0, 0%, 0%);
+  --error-border: #c93a3a;
 }
 
 /* Override theme colors when dark mode is enabled */
@@ -21,16 +24,24 @@
   --text-color: #f1f5f9;
   --secondary-bg: #1e293b;
   --border-color: #334155;
+  --error-bg: #004278;
+  --error-text: #ffffff;
+  --error-border: #00326b;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 body {
-  background-color: var(--bg-color); /* Very light slate background */
+  background-color: var(--bg-color);
   color: var(--text-color);
-  height: 100vh;
   width: 100vw;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  height: 100vh;
 }
 
 /* Fullscreen Canvas */
@@ -45,11 +56,10 @@ body {
 /* Minimalist Clean Header */
 .chat-header {
   background-color: #4f46e5;
-  /* Deep indigo accent */
   color: #ffffff;
   padding: 16px 24px;
   text-align: center;
-  position: relative; /* Keep the title centered while positioning the theme toggle independently */
+  position: relative;
 }
 
 /* Position the theme toggle at the right side of the header */
@@ -58,7 +68,6 @@ body {
   right: 24px;
   top: 50%;
   transform: translateY(-50%);
-
   padding: 8px 14px;
   background: transparent;
   color: #ffffff;
@@ -77,12 +86,15 @@ body {
   color: #ffffff;
 }
 
-/* Full-width container with comfortable margins */
-.chat-window {
-  flex: 1;
+/* Chat container expands to fill remaining space */
+.chat-window,
+#chat-window {
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
   padding: 30px 15%;
-  /* Generous side padding for desktop */
   overflow-y: auto;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -90,42 +102,48 @@ body {
 
 /* Message base styling */
 .message {
-  max-width: 75%;
+  display: flex;
+  flex-direction: column;
+  max-width: 65%;
+  width: fit-content;
   padding: 14px 18px;
   border-radius: 12px;
   font-size: 15px;
   line-height: 1.6;
   word-wrap: break-word;
+  position: relative;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
-/* User Message: Aligned Right with modern Indigo accent */
+/* User Message: Aligned Right */
 .message.user {
   align-self: flex-end;
   background-color: #4f46e5;
-  /* Deep indigo */
   color: #ffffff;
   border-bottom-right-radius: 2px;
 }
 
-/* AI Message: Aligned Left with crisp off-white/light-gray tone */
+/* AI Message: Aligned Left */
 .message.ai {
   align-self: flex-start;
-  background-color: var(--secondary-bg); /* Slate tint */
+  background-color: var(--secondary-bg);
   color: var(--text-color);
   border: 1px solid var(--border-color);
   border-bottom-left-radius: 2px;
   position: relative;
-  padding-top: 38px;
+  padding-top: 14px;
+  padding-right: 38px;
 }
 
 /* Error message state */
 .message.error {
   align-self: center;
-  background-color: #fef2f2;
-  color: #991b1b;
+  background-color: var(--error-bg);
+  color: var(--error-text);
   font-size: 14px;
-  border: 1px solid #fecaca;
+  border: 1px solid var(--error-border);
+  max-width: 80%;
+  text-align: center;
 }
 
 /* Input Bar Container */
@@ -135,10 +153,14 @@ body {
   border-top: 1px solid var(--border-color);
   display: flex;
   gap: 12px;
+  margin-top: auto;
 }
 
 #user-input {
   flex: 1;
+  min-width: 0;
+  min-height: 48px;
+  max-height: 150px;
   padding: 14px 18px;
   background-color: var(--secondary-bg);
   color: var(--text-color);
@@ -146,6 +168,10 @@ body {
   border-radius: 8px;
   outline: none;
   font-size: 15px;
+  font-family: inherit;
+  line-height: 1.5;
+  resize: none;
+  overflow-y: hidden;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -195,16 +221,16 @@ body {
   }
 }
 
-
-
-/*added*/
-/* Typing indicator */
-/* Typing indicator */
-.typing-indicator {
+/* Typing indicator - strictly horizontal */
+.message.typing-indicator {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center;
+  gap: 4px;
+  width: fit-content;
   align-self: flex-start;
   background: var(--secondary-bg);
   color: var(--text-color);
-  border: 1px solid var(--border-color);
   padding: 10px 14px;
   border-radius: 12px;
   min-width: 64px;
@@ -213,21 +239,23 @@ body {
   align-items: center;
   justify-content: center;
   gap: 4px;
+  border: 1px solid var(--border-color);
 }
 
-.typing-indicator span {
+.message.typing-indicator span {
   display: inline-block;
   color: var(--text-color);
   font-size: 20px;
+  margin: 0 2px;
   line-height: 1;
   animation: blink 1.2s infinite;
 }
 
-.typing-indicator span:nth-child(2) {
+.message.typing-indicator span:nth-child(2) {
   animation-delay: 0.2s;
 }
 
-.typing-indicator span:nth-child(3) {
+.message.typing-indicator span:nth-child(3) {
   animation-delay: 0.4s;
 }
 
@@ -265,4 +293,77 @@ body {
 .copy-btn:disabled {
   cursor: default;
   opacity: 0.7;
+}  
+/* --- Message Timestamp Styles (#4) --- */
+.message-time {
+  font-size: 0.72rem;
+  margin-top: 0.35rem;
+  align-self: flex-end;
+  opacity: 0.85;
+  user-select: none;
+  font-variant-numeric: tabular-nums;
+}
+
+/* User Bubble Time Color */
+.message.user .message-time {
+  color: #e0e7ff;
+}
+
+/* AI Bubble Time Color */
+.message.ai .message-time {
+  color: #64748b;
+}
+
+/* Error Bubble Time Color */
+.message.error .message-time {
+  color: #991b1b;
+  font-weight: 600;
+  align-self: center;
+}
+
+/* Dark Mode Overrides */
+body.dark .message.ai .message-time {
+  color: #94a3b8;
+}
+
+body.dark .message.error .message-time {
+  color: #fca5a5;
+}
+
+/* Responsive adjustment for small screens */
+@media (max-width: 768px) {
+
+  .chat-window,
+  #chat-window,
+  .input-container {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .message {
+    max-width: 88%;
+  }
+}
+
+/*added lines*/
+/* Scroll to Bottom Button */
+#scroll-bottom-btn {
+  display: none;
+  position: fixed;
+  bottom: 95px;
+  right: 30px;
+  width: 42px;
+  height: 42px;
+  border: none;
+  border-radius: 50%;
+  background-color: #4f46e5;
+  color: #ffffff;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+}
+
+#scroll-bottom-btn:hover {
+  background-color: #4338ca;
 }
