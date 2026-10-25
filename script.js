@@ -2,9 +2,9 @@ const chatWindow = document.getElementById('chat-window');
 const userInput = document.getElementById('user-input');
 const sendBtn = document.getElementById('send-btn');
 const themeToggle = document.getElementById('theme-toggle');
+const clearChatBtn = document.getElementById('clear-chat-btn');
 const scrollBottomBtn = document.getElementById('scroll-bottom-btn');
 
-/*added lines*/
 // Show the button when the user scrolls up
 function updateScrollButton() {
   const distanceFromBottom =
@@ -27,6 +27,17 @@ scrollBottomBtn.addEventListener('click', () => {
 themeToggle.addEventListener('click', () => {
   document.body.classList.toggle("dark");
 });
+
+// Clear chat window and restore initial greeting without timestamp
+if (clearChatBtn) {
+  clearChatBtn.addEventListener('click', () => {
+    chatWindow.innerHTML = `
+      <div class="message ai">
+        <span class="message-text">Hello :) I am your local AI. How can I help you today?</span>
+      </div>
+    `;
+  });
+}
 
 sendBtn.addEventListener('click', sendMessage);
 userInput.addEventListener('keydown', (event) => {

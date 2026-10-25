@@ -48,7 +48,7 @@ public class ChatServer {
                 JsonNode requestNode = mapper.readTree(rawBody);
                 String userMessage = requestNode.path("message").asText();
 
-                System.out.println("Received: " + userMessage);
+                System.out.println("Received message: " + userMessage);
 
                 // Build the request body for Ollama
                 Map<String, Object> ollamaRequestMap = new HashMap<>();
