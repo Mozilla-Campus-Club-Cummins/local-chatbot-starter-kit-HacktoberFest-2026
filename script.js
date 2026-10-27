@@ -5,6 +5,46 @@ const themeToggle = document.getElementById('theme-toggle');
 const clearChatBtn = document.getElementById('clear-chat-btn');
 const scrollBottomBtn = document.getElementById('scroll-bottom-btn');
 
+// --- Chat history persistence (localStorage) ---
+const STORAGE_KEY = 'chatHistory';
+let chatHistory = []; // [{ text, sender, time }]
+
+// localStorage can throw (private mode, quota, corrupted JSON), so every access is guarded
+function loadChatHistory() {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    const parsed = stored ? JSON.parse(stored) : [];
+    if (!Array.isArray(parsed)) return [];
+
+    // Drop malformed entries so one bad record can't break the whole chat
+    return parsed.filter(
+      (msg) =>
+        msg &&
+        typeof msg.text === 'string' &&
+        (msg.sender === 'user' || msg.sender === 'ai')
+    );
+  } catch (error) {
+    console.error('Failed to load chat history:', error);
+    return [];
+  }
+}
+
+function saveChatHistory() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(chatHistory));
+  } catch (error) {
+    console.error('Failed to save chat history:', error);
+  }
+}
+
+// Re-render saved messages after the greeting that is already in index.html
+document.addEventListener('DOMContentLoaded', () => {
+  chatHistory = loadChatHistory();
+  chatHistory.forEach((msg) =>
+    appendMessage(msg.text, msg.sender, msg.time, false)
+  );
+});
+
 // Show the button when the user scrolls up
 function updateScrollButton() {
   const distanceFromBottom =
@@ -31,6 +71,13 @@ themeToggle.addEventListener('click', () => {
 // Clear chat window and restore initial greeting without timestamp
 if (clearChatBtn) {
   clearChatBtn.addEventListener('click', () => {
+    chatHistory = [];
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+    } catch (error) {
+      console.error('Failed to clear chat history:', error);
+    }
+
     chatWindow.innerHTML = `
       <div class="message ai">
         <span class="message-text">Hello :) I am your local AI. How can I help you today?</span>
@@ -112,7 +159,8 @@ async function sendMessage() {
   }
 }
 
-function appendMessage(text, senderClass) {
+// time/shouldSave let us re-render saved messages without saving them a second time
+function appendMessage(text, senderClass, time = formatTimestamp(), shouldSave = true) {
   const messageElement = document.createElement('div');
   messageElement.classList.add('message', senderClass);
 
@@ -158,13 +206,19 @@ function appendMessage(text, senderClass) {
   // Timestamp container
   const timeElement = document.createElement('span');
   timeElement.classList.add('message-time');
-  timeElement.textContent = formatTimestamp();
+  timeElement.textContent = time;
 
   messageElement.appendChild(timeElement);
   chatWindow.appendChild(messageElement);
 
   // Auto-scroll to the bottom
   chatWindow.scrollTop = chatWindow.scrollHeight;
+
+  // Persist chat messages only; error notices are temporary and shouldn't come back on reload
+  if (shouldSave && senderClass !== 'error') {
+    chatHistory.push({ text, sender: senderClass, time });
+    saveChatHistory();
+  }
 }
 
 function toggleInputState(isDisabled) {
